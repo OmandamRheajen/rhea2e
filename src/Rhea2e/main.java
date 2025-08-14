@@ -1,90 +1,120 @@
 package Rhea2e;
 
 import java.util.Scanner;
-import banking.bankApp;
+import banking.banking;
 
 public class main {
-    
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        
-        System.out.println("HELLO WELCOME TO THE SYSTEM!");
-        System.out.println("What do you feel doing today? ");
-        System.out.println("1. Banking");
-        System.out.println("2. Doctors Appointment");
-        System.out.println("3. Shopping");
-        
-        bankApp bApp[] = new bankApp[10];
-        
-        System.out.print("Enter choice: ");
-        int choice = sc.nextInt();
-        int resp;
-        switch(choice){
-            case 1:
-              do{
-                System.out.println("1. Register Account");
-                System.out.println("2. Login Account");
-                System.out.println("3. View All Accounts");
-                System.out.println("Enter Selection: ");
-                int action = sc.nextInt();
-                
-                switch(action){
-                    case 1:
-                        bApp[0] = new bankApp();
-                        System.out.print("Enter Account No.: ");
-                        bApp[0].setAccountNo(sc.nextInt());
-                        System.out.print("Enter Account Pin: ");
-                        bApp[0].setPin(sc.nextInt());
-                        break;
-                    case 2:
-                        int attempts = 3;
-                        bankApp bc = new bankApp();
+        banking[] bapp = new banking[99];
+        int accountCount = 0; 
+        int response;
 
-                        System.out.print("Enter your Account No: ");
-                        int accountNo = sc.nextInt();
+        do {
+            System.out.println("\nWELCOME TO MY SYSTEM!");
+            System.out.println("What do you feel like doing today?");
+            System.out.println("1. Banking");
+            System.out.println("2. Shopping");
+            System.out.println("3. Pay Bills");
+            System.out.print("Enter your choice: ");
+            int choice = sc.nextInt();
+            
+            switch (choice) {
+                case 1:
+                    System.out.println("\n1. Register");
+                    System.out.println("2. Login");
+                    System.out.println("3. Exit");
+                    System.out.print("Enter Action: ");
+                    int action = sc.nextInt();
 
-                        System.out.print("Enter your Pin: ");
-                        int pin = sc.nextInt();
+                    switch (action) {
+                        case 1:
+                            if (accountCount < bapp.length) {
+                                System.out.print("Enter Account No.: ");
+                                int newAccNo = sc.nextInt();
+                                System.out.print("Enter Pin No.: ");
+                                int newPin = sc.nextInt();
+                                
+                                bapp[accountCount] = new banking(newAccNo, newPin);
+                                System.out.println("Registered Account No: " + bapp[accountCount].getAccNo());
+                                accountCount++;
+                            } else {
+                                System.out.println("Maximum number of accounts reached.");
+                            }
+                            break;
 
-                        while(!(bc.verifyAccount(accountNo, pin))){
-                            if(attempts == 1){
-                                System.out.println("ATTEMPT LIMIT REACHED!");
-                                System.exit(0);
+                        case 2:
+                            System.out.print("Enter Account No.: ");
+                            int accn = sc.nextInt();
+                            System.out.print("Enter Pin No.: ");
+                            int pin = sc.nextInt();
+
+                            banking loggedInAccount = null;
+                            for (int i = 0; i < accountCount; i++) {
+                                if (bapp[i].verifyAccount(accn, pin)) {
+                                    loggedInAccount = bapp[i];
+                                    break;
+                                }
                             }
 
-                            attempts--;
-                            System.out.println("Attempt Left: "+attempts);
+                            if (loggedInAccount != null) {
+                                System.out.println("\nLOGIN SUCCESS!");
+                                
+                                int bankChoice;
+                                do {
+                                    System.out.println("\n*** BANKING MENU ***");
+                                    System.out.println("1. Deposit");
+                                    System.out.println("2. Withdraw");
+                                    System.out.println("3. Check Balance");
+                                    System.out.println("4. Logout");
+                                    System.out.print("Enter your choice: ");
+                                    bankChoice = sc.nextInt();
 
-                            System.out.println("INVALID ACCOUNT!");
-                            System.out.print("Enter your Account No: ");
-                            accountNo = sc.nextInt();
-                            System.out.print("Enter your Pin: ");
-                            pin = sc.nextInt();
+                                    switch (bankChoice) {
+                                        case 1:
+                                            System.out.print("Enter amount to deposit: ");
+                                            float depositAmount = sc.nextFloat();
+                                            loggedInAccount.deposit(depositAmount);
+                                            break;
+                                        case 2:
+                                            System.out.print("Enter amount to withdraw: ");
+                                            float withdrawAmount = sc.nextFloat();
+                                            loggedInAccount.withdraw(withdrawAmount);
+                                            break;
+                                        case 3:
+                                            System.out.println("Current balance: " + loggedInAccount.getBalance());
+                                            break;
+                                        case 4:
+                                            System.out.println("Logging out...");
+                                            break;
+                                        default:
+                                            System.out.println("Invalid choice.");
+                                    }
+                                } while (bankChoice != 4);
+                            } else {
+                                System.out.println("Invalid account number or PIN.");
+                            }
+                            break;
 
-                        }
-                        
-                
+                        case 3:
+                            
+                            break;
+                        default:
+                            System.out.println("INVALID ACTION");
+                    }
                     break;
-                    case 3:
-                        break;
-                
-                }
-                  System.out.print("Do you want to continue? (1/0):");
-                  resp = sc.nextInt();
-              }while(resp == 1);
-                
-                break;
-            case 2:
-                
-                break;
-            case 3:
-                
-                break;
-            default:
-                System.out.println("Invalid Selection!");
-        
-        }
-            
+                case 2:
+                    System.out.println("Shopping feature not implemented.");
+                    break;
+                case 3:
+                    System.out.println("Pay Bills feature not implemented.");
+                    break;
+                default:
+                    System.out.println("INVALID ACTION!");
+            }
+            System.out.print("\nDo you want to Continue? (1/0): ");
+            response = sc.nextInt();
+        } while (response == 1);
     }
-    
 }
